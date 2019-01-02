@@ -164,21 +164,21 @@ namespace clock {
     }
 
     /**
-     * Returns true if countdown is initiated, otherwise false
-     */
-    //% block
-    //% advanced=true
-    export function CountDownState(): boolean {
-        return countdown
-    }
-
-    /**
      * Stops the countdown
      */
     //% block
     //% advanced=true
     export function StopCountdown(): void {
         countdown = false
+    }
+
+    /**
+     * Returns true if countdown is initiated, otherwise false
+     */
+    //% block
+    //% advanced=true
+    export function CountDownState(): boolean {
+        return countdown
     }
 
     /**
