@@ -212,7 +212,7 @@ namespace clock {
     //% block
     //% advanced=true
     export function getRemainingTime(): number {
-        if (countdown && getRemainingTime() > 0) {
+        if (countdown && Math.floor((downtimelimit - input.runningTime()) / 1000) > 0) {
             return Math.floor((downtimelimit - input.runningTime()) / 1000)
         } else return 0
     }
