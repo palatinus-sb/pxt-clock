@@ -182,7 +182,7 @@ namespace clock {
     }
 
     /**
-     * Adds x seconds to the time
+     * Only returns the minutes of the remaining time
      * e.g. 01:12 -> 1 minute
      */
     //% block
@@ -194,7 +194,7 @@ namespace clock {
     }
 
     /**
-     * Adds x seconds to the time
+     * Only returns the seconds of the remaining time
      * e.g. 01:12 -> 12 seconds
      */
     //% block
