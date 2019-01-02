@@ -10,6 +10,9 @@ namespace clock {
     let Second = 0
     let ampm = false
 
+    let downtimelimit = 0
+    let countdown = false
+
     /**
      * Returns the time as a string in the format "00:00"
      */
@@ -148,5 +151,69 @@ namespace clock {
     export function AddSecond(second: number = 1): void {
         timeoffset += second
         Clock()
+    }
+
+    /**
+     * Starts the countdown of x seconds
+     */
+    //% block
+    //% advanced=true
+    export function StartCountdown(seconds: number): void {
+        downtimelimit = input.runningTime() + seconds * 1000
+        countdown = true
+    }
+
+    /**
+     * Returns true if countdown is initiated, otherwise false
+     */
+    //% block
+    //% advanced=true
+    export function CountDownState(): boolean {
+        return countdown
+    }
+
+    /**
+     * Stops the countdown
+     */
+    //% block
+    //% advanced=true
+    export function StopCountdown(): void {
+        countdown = false
+    }
+
+    /**
+     * Adds x seconds to the time
+     * e.g. 01:12 -> 1 minute
+     */
+    //% block
+    //% advanced=true
+    export function getRemainingMinute(): number {
+        if (countdown) {
+            return Math.floor(Math.floor((downtimelimit - input.runningTime()) / 1000) / 60)
+        } else return 0
+    }
+
+    /**
+     * Adds x seconds to the time
+     * e.g. 01:12 -> 12 seconds
+     */
+    //% block
+    //% advanced=true
+    export function getRemainingSecond(): number {
+        if (countdown) {
+            return Math.floor((downtimelimit - input.runningTime()) / 1000) - getRemainingMinute() * 60
+        } else return 0
+    }
+
+    /**
+     * Returns the remaining time in seconds
+     * e.g. 01:12 -> 72 seconds
+     */
+    //% block
+    //% advanced=true
+    export function getRemainingTime(): number {
+        if (countdown) {
+            return Math.floor((downtimelimit - input.runningTime()) / 1000)
+        } else return 0
     }
 }
