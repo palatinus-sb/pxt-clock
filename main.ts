@@ -188,7 +188,7 @@ namespace clock {
     //% block
     //% advanced=true
     export function getRemainingMinute(): number {
-        if (countdown) {
+        if (countdown && getRemainingTime() > 0) {
             return Math.floor(Math.floor((downtimelimit - input.runningTime()) / 1000) / 60)
         } else return 0
     }
@@ -200,7 +200,7 @@ namespace clock {
     //% block
     //% advanced=true
     export function getRemainingSecond(): number {
-        if (countdown) {
+        if (countdown && getRemainingTime() > 0) {
             return Math.floor((downtimelimit - input.runningTime()) / 1000) - getRemainingMinute() * 60
         } else return 0
     }
@@ -212,7 +212,7 @@ namespace clock {
     //% block
     //% advanced=true
     export function getRemainingTime(): number {
-        if (countdown) {
+        if (countdown && getRemainingTime() > 0) {
             return Math.floor((downtimelimit - input.runningTime()) / 1000)
         } else return 0
     }
