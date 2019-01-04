@@ -17,7 +17,7 @@ namespace clock {
      * Returns the time as a string in the format "00:00"
      */
     //% block
-    export function stringTime(): string {
+    export function Time(): string {
         let stringtime = ""
         Clock()
         if (Minute < 10) {
@@ -179,6 +179,26 @@ namespace clock {
     //% advanced=true
     export function CountDownState(): boolean {
         return countdown
+    }
+
+    /**
+     * Returns the remaining time as a string in the format "00:00"
+     */
+    //% block
+    //% advanced=true
+    export function DownTime(): string {
+        let stringtime = ""
+        if (Minute < 10) {
+            stringtime = "0" + getRemainingSecond()
+        } else {
+            stringtime = "" + getRemainingSecond()
+        }
+        if (Hour < 10) {
+            stringtime = "0" + getRemainingMinute() + ":" + stringtime
+        } else {
+            stringtime = "" + getRemainingMinute() + ":" + stringtime
+        }
+        return stringtime
     }
 
     /**
