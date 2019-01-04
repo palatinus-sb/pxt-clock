@@ -188,12 +188,12 @@ namespace clock {
     //% advanced=true
     export function DownTime(): string {
         let stringtime = ""
-        if (Minute < 10) {
+        if (getRemainingSecond() < 10) {
             stringtime = "0" + getRemainingSecond()
         } else {
             stringtime = "" + getRemainingSecond()
         }
-        if (Hour < 10) {
+        if (getRemainingMinute() < 10) {
             stringtime = "0" + getRemainingMinute() + ":" + stringtime
         } else {
             stringtime = "" + getRemainingMinute() + ":" + stringtime
