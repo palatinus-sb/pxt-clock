@@ -4,7 +4,7 @@
 //% weight=100 color=#00cc96 icon="\uf017" block="Clock"
 namespace clock {
     let timeoffset = 0
-    //let timecounter = 0
+    let timecounter = 0
     let Hour = 0
     let Minute = 0
     let Second = 0
@@ -102,11 +102,11 @@ namespace clock {
     }
 
     function Clock(): void {
-        /*timecounter++
+        timecounter++
         if (timecounter >= 3600) {
             timecounter = 0
-            timeoffset += 30
-        }*/
+            timeoffset += 15
+        }
         let time = Math.floor(input.runningTime() / 1000) + timeoffset
         if (ampm) {
             if (time >= 12 * 60 * 60) {
