@@ -4,7 +4,7 @@
 //% weight=100 color=#00cc96 icon="\uf017" block="Clock"
 namespace clock {
     let timeoffset = 0
-    let timecounter = 0
+    let timecorrector = input.runningTime()
     let Hour = 0
     let Minute = 0
     let Second = 0
@@ -102,9 +102,8 @@ namespace clock {
     }
 
     function Clock(): void {
-        timecounter++
-        if (timecounter >= 3600) {
-            timecounter = 0
+        if (input.runningTime() - timecorrector >= 3600000) {
+            timecorrector = input.runningTime()
             timeoffset += 15
         }
         let time = Math.floor(input.runningTime() / 1000) + timeoffset
