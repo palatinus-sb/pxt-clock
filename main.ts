@@ -104,7 +104,7 @@ namespace clock {
     function Clock(): void {
         if (input.runningTime() - timecorrector >= 3600000) {
             timecorrector = input.runningTime()
-            timeoffset += 15
+            timeoffset += 30
         }
         let time = Math.floor(input.runningTime() / 1000) + timeoffset
         if (ampm) {
