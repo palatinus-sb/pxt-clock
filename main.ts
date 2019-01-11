@@ -9,10 +9,8 @@ namespace clock {
     let Min = 0
     let Sec = 0
     let ampm = false
-
     let dtlimit = 0
     let cd = false
-
     /**
      * Returns the time as a string in the format "00:00"
      */
@@ -32,7 +30,6 @@ namespace clock {
         }
         return str
     }
-
     /**
      * Only returns the hours of the time
      */
@@ -41,7 +38,6 @@ namespace clock {
         Clock()
         return Hour
     }
-
     /**
      * Only returns the Mins of the time
      */
@@ -50,7 +46,6 @@ namespace clock {
         Clock()
         return Min
     }
-
     /**
      * Only returns the Secs of the time
      */
@@ -59,7 +54,6 @@ namespace clock {
         Clock()
         return Sec
     }
-
     /**
      * Returns the time in Secs
      */
@@ -68,7 +62,6 @@ namespace clock {
         Clock()
         return Math.floor(input.runningTime() / 1000) + toffset
     }
-
     /**
      * Sets the time to a specific value 
      * eg: 11, 54, 23 is 11:54:23
@@ -81,18 +74,14 @@ namespace clock {
         Hour = Math.floor(time / 3600)
         Min = Math.floor((time - Hour * 3600) / 60)
         Sec = time - Hour * 3600 - Min * 60
-
         if (!(hour >= 0 && hour < 24 && Min >= 0 && Min < 60 && Sec >= 0 && Sec < 60)) {
             return
         }
-
         toffset -= (Hour - hour) * 3600
         toffset -= (Min - Min) * 60
         toffset -= (Sec - Sec)
-
         Clock()
     }
-
     /**
      * Enables or disables the 12 hour clock
      */
@@ -100,7 +89,6 @@ namespace clock {
     export function EnableAmPm(value: boolean) {
         ampm = value
     }
-
     function Clock(): void {
         if (input.runningTime() - tcorrector >= 3600000) {
             tcorrector = input.runningTime()
@@ -121,7 +109,6 @@ namespace clock {
         Min = Math.floor((time - Hour * 3600) / 60)
         Sec = time - Hour * 3600 - Min * 60
     }
-
     /**
      * Adds x hours to the time
      * if argument left empty, it will add 1
@@ -131,7 +118,6 @@ namespace clock {
         toffset += hour * 3600
         Clock()
     }
-
     /**
      * Adds x Mins to the time
      * if argument left empty, it will add 1
@@ -141,7 +127,6 @@ namespace clock {
         toffset += Min * 60
         Clock()
     }
-
 	/**
      * Adds x Secs to the time
      * if argument left empty, it will add 1
@@ -151,7 +136,6 @@ namespace clock {
         toffset += Sec
         Clock()
     }
-
     /**
      * Starts the cd of x Secs
      */
@@ -161,7 +145,6 @@ namespace clock {
         dtlimit = input.runningTime() + Secs * 1000
         cd = true
     }
-
     /**
      * Stops the cd
      */
@@ -171,7 +154,6 @@ namespace clock {
         cd = false
         let dtlimit: number
     }
-
     /**
      * Returns true if cd is initiated, otherwise false
      */
@@ -180,7 +162,6 @@ namespace clock {
     export function cdState(): boolean {
         return cd
     }
-
     /**
      * Returns the remaining time as a string in the format "00:00"
      */
@@ -200,7 +181,6 @@ namespace clock {
         }
         return str
     }
-
     /**
      * Only returns the Mins of the remaining time
      * e.g. 01:12 -> 1 Min
@@ -212,7 +192,6 @@ namespace clock {
             return Math.floor(Math.floor((dtlimit - input.runningTime()) / 1000) / 60)
         } else return 0
     }
-
     /**
      * Only returns the Secs of the remaining time
      * e.g. 01:12 -> 12 Secs
@@ -224,7 +203,6 @@ namespace clock {
             return Math.floor((dtlimit - input.runningTime()) / 1000) - getRemainingMin() * 60
         } else return 0
     }
-
     /**
      * Returns the remaining time in Secs
      * e.g. 01:12 -> 72 Secs
