@@ -3,34 +3,34 @@
  */
 //% weight=100 color=#00cc96 icon="\uf017" block="Clock"
 namespace clock {
-    let timeoffset = 0
-    let timecorrector = input.runningTime()
+    let toffset = 0
+    let tcorrector = input.runningTime()
     let Hour = 0
-    let Minute = 0
-    let Second = 0
+    let Min = 0
+    let Sec = 0
     let ampm = false
 
-    let downtimelimit = 0
-    let countdown = false
+    let dtlimit = 0
+    let cd = false
 
     /**
      * Returns the time as a string in the format "00:00"
      */
     //% block
     export function Time(): string {
-        let stringtime = ""
+        let str = ""
         Clock()
-        if (Minute < 10) {
-            stringtime = "0" + Minute
+        if (Min < 10) {
+            str = "0" + Min
         } else {
-            stringtime = "" + Minute
+            str = "" + Min
         }
         if (Hour < 10) {
-            stringtime = "0" + Hour + ":" + stringtime
+            str = "0" + Hour + ":" + str
         } else {
-            stringtime = "" + Hour + ":" + stringtime
+            str = "" + Hour + ":" + str
         }
-        return stringtime
+        return str
     }
 
     /**
@@ -43,30 +43,30 @@ namespace clock {
     }
 
     /**
-     * Only returns the minutes of the time
+     * Only returns the Mins of the time
      */
     //% block
-    export function getMinute(): number {
+    export function getMin(): number {
         Clock()
-        return Minute
+        return Min
     }
 
     /**
-     * Only returns the seconds of the time
+     * Only returns the Secs of the time
      */
     //% block
-    export function getSecond(): number {
+    export function getSec(): number {
         Clock()
-        return Second
+        return Sec
     }
 
     /**
-     * Returns the time in seconds
+     * Returns the time in Secs
      */
     //% block
-    export function getTimeInSeconds(): number {
+    export function getTimeInSecs(): number {
         Clock()
-        return Math.floor(input.runningTime() / 1000) + timeoffset
+        return Math.floor(input.runningTime() / 1000) + toffset
     }
 
     /**
@@ -75,20 +75,20 @@ namespace clock {
      * ignores invalid time
      */
     //% block
-    export function SetTime(hour: number, minute: number, second: number = 0): void {
+    export function SetTime(hour: number, Min: number, Sec: number = 0): void {
         Clock()
-        let time = Math.floor(input.runningTime() / 1000) + timeoffset
+        let time = Math.floor(input.runningTime() / 1000) + toffset
         Hour = Math.floor(time / 3600)
-        Minute = Math.floor((time - Hour * 3600) / 60)
-        Second = time - Hour * 3600 - Minute * 60
+        Min = Math.floor((time - Hour * 3600) / 60)
+        Sec = time - Hour * 3600 - Min * 60
 
-        if (!(hour >= 0 && hour < 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60)) {
+        if (!(hour >= 0 && hour < 24 && Min >= 0 && Min < 60 && Sec >= 0 && Sec < 60)) {
             return
         }
 
-        timeoffset -= (Hour - hour) * 3600
-        timeoffset -= (Minute - minute) * 60
-        timeoffset -= (Second - second)
+        toffset -= (Hour - hour) * 3600
+        toffset -= (Min - Min) * 60
+        toffset -= (Sec - Sec)
 
         Clock()
     }
@@ -102,24 +102,24 @@ namespace clock {
     }
 
     function Clock(): void {
-        if (input.runningTime() - timecorrector >= 3600000) {
-            timecorrector = input.runningTime()
-            timeoffset += 30
+        if (input.runningTime() - tcorrector >= 3600000) {
+            tcorrector = input.runningTime()
+            toffset += 24
         }
-        let time = Math.floor(input.runningTime() / 1000) + timeoffset
+        let time = Math.floor(input.runningTime() / 1000) + toffset
         if (ampm) {
             if (time >= 12 * 60 * 60) {
-                timeoffset -= 24 * 60 * 60
+                toffset -= 24 * 60 * 60
             }
         } else {
             if (time >= 24 * 60 * 60) {
-                timeoffset -= 24 * 60 * 60
+                toffset -= 24 * 60 * 60
             }
         }
-        time = Math.floor(input.runningTime() / 1000) + timeoffset
+        time = Math.floor(input.runningTime() / 1000) + toffset
         Hour = Math.floor(time / 3600)
-        Minute = Math.floor((time - Hour * 3600) / 60)
-        Second = time - Hour * 3600 - Minute * 60
+        Min = Math.floor((time - Hour * 3600) / 60)
+        Sec = time - Hour * 3600 - Min * 60
     }
 
     /**
@@ -128,56 +128,57 @@ namespace clock {
      */
     //% block
     export function AddHour(hour: number = 1): void {
-        timeoffset += hour * 3600
+        toffset += hour * 3600
         Clock()
     }
 
     /**
-     * Adds x minutes to the time
+     * Adds x Mins to the time
      * if argument left empty, it will add 1
      */
     //% block
-    export function AddMinute(minute: number = 1): void {
-        timeoffset += minute * 60
+    export function AddMin(Min: number = 1): void {
+        toffset += Min * 60
         Clock()
     }
 
 	/**
-     * Adds x seconds to the time
+     * Adds x Secs to the time
      * if argument left empty, it will add 1
      */
     //% block
-    export function AddSecond(second: number = 1): void {
-        timeoffset += second
+    export function AddSec(Sec: number = 1): void {
+        toffset += Sec
         Clock()
     }
 
     /**
-     * Starts the countdown of x seconds
+     * Starts the cd of x Secs
      */
     //% block
     //% advanced=true
-    export function StartCountdown(seconds: number): void {
-        downtimelimit = input.runningTime() + seconds * 1000
-        countdown = true
+    export function Startcd(Secs: number): void {
+        dtlimit = input.runningTime() + Secs * 1000
+        cd = true
     }
 
     /**
-     * Stops the countdown
+     * Stops the cd
      */
     //% block
     //% advanced=true
-    export function StopCountdown(): void {
-        countdown = false
+    export function Stopcd(): void {
+        cd = false
+        let dtlimit: number
     }
 
     /**
-     * Returns true if countdown is initiated, otherwise false
+     * Returns true if cd is initiated, otherwise false
      */
     //% block
     //% advanced=true
-    export function CountDownState(): boolean {
-        return countdown
+    export function cdState(): boolean {
+        return cd
     }
 
     /**
@@ -186,53 +187,53 @@ namespace clock {
     //% block
     //% advanced=true
     export function DownTime(): string {
-        let stringtime = ""
-        if (getRemainingSecond() < 10) {
-            stringtime = "0" + getRemainingSecond()
+        let str = ""
+        if (getRemainingSec() < 10) {
+            str = "0" + getRemainingSec()
         } else {
-            stringtime = "" + getRemainingSecond()
+            str = "" + getRemainingSec()
         }
-        if (getRemainingMinute() < 10) {
-            stringtime = "0" + getRemainingMinute() + ":" + stringtime
+        if (getRemainingMin() < 10) {
+            str = "0" + getRemainingMin() + ":" + str
         } else {
-            stringtime = "" + getRemainingMinute() + ":" + stringtime
+            str = "" + getRemainingMin() + ":" + str
         }
-        return stringtime
+        return str
     }
 
     /**
-     * Only returns the minutes of the remaining time
-     * e.g. 01:12 -> 1 minute
+     * Only returns the Mins of the remaining time
+     * e.g. 01:12 -> 1 Min
      */
     //% block
     //% advanced=true
-    export function getRemainingMinute(): number {
-        if (countdown && getRemainingTime() > 0) {
-            return Math.floor(Math.floor((downtimelimit - input.runningTime()) / 1000) / 60)
+    export function getRemainingMin(): number {
+        if (cd && getRemainingTime() > 0) {
+            return Math.floor(Math.floor((dtlimit - input.runningTime()) / 1000) / 60)
         } else return 0
     }
 
     /**
-     * Only returns the seconds of the remaining time
-     * e.g. 01:12 -> 12 seconds
+     * Only returns the Secs of the remaining time
+     * e.g. 01:12 -> 12 Secs
      */
     //% block
     //% advanced=true
-    export function getRemainingSecond(): number {
-        if (countdown && getRemainingTime() > 0) {
-            return Math.floor((downtimelimit - input.runningTime()) / 1000) - getRemainingMinute() * 60
+    export function getRemainingSec(): number {
+        if (cd && getRemainingTime() > 0) {
+            return Math.floor((dtlimit - input.runningTime()) / 1000) - getRemainingMin() * 60
         } else return 0
     }
 
     /**
-     * Returns the remaining time in seconds
-     * e.g. 01:12 -> 72 seconds
+     * Returns the remaining time in Secs
+     * e.g. 01:12 -> 72 Secs
      */
     //% block
     //% advanced=true
     export function getRemainingTime(): number {
-        if (countdown && Math.floor((downtimelimit - input.runningTime()) / 1000) > 0) {
-            return Math.floor((downtimelimit - input.runningTime()) / 1000)
+        if (cd && Math.floor((dtlimit - input.runningTime()) / 1000) > 0) {
+            return Math.floor((dtlimit - input.runningTime()) / 1000)
         } else return 0
     }
 }
