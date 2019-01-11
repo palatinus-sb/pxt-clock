@@ -42,7 +42,7 @@ namespace clock {
      * Only returns the Mins of the time
      */
     //% block
-    export function getMin(): number {
+    export function getMinute(): number {
         Clock()
         return Min
     }
@@ -50,15 +50,15 @@ namespace clock {
      * Only returns the Secs of the time
      */
     //% block
-    export function getSec(): number {
+    export function getSecond(): number {
         Clock()
         return Sec
     }
     /**
-     * Returns the time in Secs
+     * Returns the time in Secondss
      */
     //% block
-    export function getTimeInSecs(): number {
+    export function getTimeInSeconds(): number {
         Clock()
         return Math.floor(input.runningTime() / 1000) + toffset
     }
@@ -123,7 +123,7 @@ namespace clock {
      * if argument left empty, it will add 1
      */
     //% block
-    export function AddMin(Min: number = 1): void {
+    export function AddMinute(Min: number = 1): void {
         toffset += Min * 60
         Clock()
     }
@@ -132,7 +132,7 @@ namespace clock {
      * if argument left empty, it will add 1
      */
     //% block
-    export function AddSec(Sec: number = 1): void {
+    export function AddSecond(Sec: number = 1): void {
         toffset += Sec
         Clock()
     }
@@ -141,7 +141,7 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function Startcd(Secs: number): void {
+    export function StartCountDown(Secs: number): void {
         dtlimit = input.runningTime() + Secs * 1000
         cd = true
     }
@@ -150,7 +150,7 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function Stopcd(): void {
+    export function StopCountDown(): void {
         cd = false
         let dtlimit: number
     }
@@ -159,7 +159,7 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function cdState(): boolean {
+    export function CountDownState(): boolean {
         return cd
     }
     /**
@@ -169,15 +169,15 @@ namespace clock {
     //% advanced=true
     export function DownTime(): string {
         let str = ""
-        if (getRemainingSec() < 10) {
-            str = "0" + getRemainingSec()
+        if (getRemainingSecond() < 10) {
+            str = "0" + getRemainingSecond()
         } else {
-            str = "" + getRemainingSec()
+            str = "" + getRemainingSecond()
         }
-        if (getRemainingMin() < 10) {
-            str = "0" + getRemainingMin() + ":" + str
+        if (getRemainingMinute() < 10) {
+            str = "0" + getRemainingMinute() + ":" + str
         } else {
-            str = "" + getRemainingMin() + ":" + str
+            str = "" + getRemainingMinute() + ":" + str
         }
         return str
     }
@@ -187,7 +187,7 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function getRemainingMin(): number {
+    export function getRemainingMinute(): number {
         if (cd && getRemainingTime() > 0) {
             return Math.floor(Math.floor((dtlimit - input.runningTime()) / 1000) / 60)
         } else return 0
@@ -198,9 +198,9 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function getRemainingSec(): number {
+    export function getRemainingSecond(): number {
         if (cd && getRemainingTime() > 0) {
-            return Math.floor((dtlimit - input.runningTime()) / 1000) - getRemainingMin() * 60
+            return Math.floor((dtlimit - input.runningTime()) / 1000) - getRemainingMinute() * 60
         } else return 0
     }
     /**
