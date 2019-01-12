@@ -39,7 +39,7 @@ namespace clock {
         return Hour
     }
     /**
-     * Only returns the Mins of the time
+     * Only returns the minutes of the time
      */
     //% block
     export function getMinute(): number {
@@ -47,7 +47,7 @@ namespace clock {
         return Min
     }
     /**
-     * Only returns the Secs of the time
+     * Only returns the seconds of the time
      */
     //% block
     export function getSecond(): number {
@@ -55,7 +55,7 @@ namespace clock {
         return Sec
     }
     /**
-     * Returns the time in Secondss
+     * Returns the time in Seconds
      */
     //% block
     export function getTimeInSeconds(): number {
@@ -68,18 +68,18 @@ namespace clock {
      * ignores invalid time
      */
     //% block
-    export function SetTime(hour: number, Min: number, Sec: number = 0): void {
+    export function SetTime(h: number, m: number, s: number = 0): void {
         Clock()
         let time = Math.floor(input.runningTime() / 1000) + toffset
         Hour = Math.floor(time / 3600)
         Min = Math.floor((time - Hour * 3600) / 60)
         Sec = time - Hour * 3600 - Min * 60
-        if (!(hour >= 0 && hour < 24 && Min >= 0 && Min < 60 && Sec >= 0 && Sec < 60)) {
+        if (!(h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60)) {
             return
         }
-        toffset -= (Hour - hour) * 3600
-        toffset -= (Min - Min) * 60
-        toffset -= (Sec - Sec)
+        toffset -= (Hour - h) * 3600
+        toffset -= (Min - m) * 60
+        toffset -= (Sec - s)
         Clock()
     }
     /**
