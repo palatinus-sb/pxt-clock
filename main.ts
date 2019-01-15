@@ -92,7 +92,7 @@ namespace clock {
     function Clock(): void {
         if (input.runningTime() - tcorrector >= 3600000) {
             tcorrector = input.runningTime()
-            toffset += 24
+            toffset += 24.5
         }
         let time = Math.floor(input.runningTime() / 1000) + toffset
         if (ampm) {
