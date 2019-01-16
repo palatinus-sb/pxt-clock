@@ -99,6 +99,14 @@ namespace clock {
     export function EnableAmPm(value: boolean) {
         ampm = value
     }
+    /**
+     * Returns true if the 12 hour clock is enabled,
+     * otherwise false
+     */
+    //% block
+    export function AmPmState(): boolean {
+        return ampm
+    }
     function Clock(): void {
         if (input.runningTime() - tcorrector >= 1800000) {
             tcorrector = input.runningTime()
