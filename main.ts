@@ -23,6 +23,11 @@ namespace clock {
         } else {
             str = "" + Min
         }
+        if (ampm && Hour > 12) {
+            Hour -= 12
+        } else if (ampm && Hour == 0) {
+            Hour = 12
+        }
         if (Hour < 10) {
             str = "0" + Hour + ":" + str
         } else {
@@ -36,6 +41,11 @@ namespace clock {
     //% block
     export function getHour(): number {
         Clock()
+        if (ampm && Hour > 12) {
+            Hour -= 12
+        } else if (ampm && Hour == 0) {
+            Hour = 12
+        }
         return Hour
     }
     /**
@@ -90,19 +100,13 @@ namespace clock {
         ampm = value
     }
     function Clock(): void {
-        if (input.runningTime() - tcorrector >= 3600000) {
+        if (input.runningTime() - tcorrector >= 1800000) {
             tcorrector = input.runningTime()
-            toffset += 24.5
+            toffset += 12.125
         }
         let time = Math.floor(input.runningTime() / 1000) + toffset
-        if (ampm) {
-            if (time >= 12 * 60 * 60) {
-                toffset -= 24 * 60 * 60
-            }
-        } else {
-            if (time >= 24 * 60 * 60) {
-                toffset -= 24 * 60 * 60
-            }
+        if (time >= 24 * 60 * 60) {
+            toffset -= 24 * 60 * 60
         }
         time = Math.floor(input.runningTime() / 1000) + toffset
         Hour = Math.floor(time / 3600)
