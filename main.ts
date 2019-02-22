@@ -19,9 +19,9 @@ namespace clock {
     let cdstate = false
     //the Clock mechanism:
     function Clock(t: Time): number {
-        if (Math.floor(input.runningTime() / 1000) - tcorrector >= 1800) {
+        if (Math.floor(input.runningTime() / 1000) - tcorrector >= 900) {
             tcorrector = Math.floor(input.runningTime() / 1000)
-            toffset += 10
+            toffset += 5
         }
         let time = Math.floor(input.runningTime() / 1000) + toffset
         if (time >= 24 * 60 * 60) {
