@@ -18,7 +18,7 @@ namespace clock {
     let dtlimit = 0
     let cdstate = false
     //the Clock mechanism:
-    function AdvClock(t: Time): number {
+    function Clock(t: Time): number {
         if (Math.floor(input.runningTime() / 1000) - tcorrector >= 1800) {
             tcorrector = Math.floor(input.runningTime() / 1000)
             toffset += 10
@@ -33,10 +33,11 @@ namespace clock {
                 return Math.floor(time / 3600)
                 break
             case Time.Minute:
-                return Math.floor((time - AdvClock(Time.Hour) * 3600) / 60)
+                return Math.floor((time - Math.floor(time / 3600) * 3600) / 60)
                 break
             case Time.Second:
-                return Math.floor(time - AdvClock(Time.Hour) * 3600 - AdvClock(Time.Minute) * 60)
+                return (Math.floor(time - Math.floor(time / 3600) * 3600
+                    - Math.floor((time - Math.floor(time / 3600) * 3600) / 60) * 60))
                 break
         }
     }
@@ -46,9 +47,9 @@ namespace clock {
     //% block
     export function TimeString(f: TimeFormat): string {
         let str = ""
-        let H = AdvClock(Time.Hour)
-        let M = AdvClock(Time.Minute)
-        let S = AdvClock(Time.Second)
+        let H = Clock(Time.Hour)
+        let M = Clock(Time.Minute)
+        let S = Clock(Time.Second)
         if (f == TimeFormat.hhmmss) {
             if (S < 10) {
                 str = ":0" + S
@@ -79,7 +80,7 @@ namespace clock {
     //% block
     export function getHour(): number {
         if (ampm) {
-            let H = AdvClock(Time.Hour)
+            let H = Clock(Time.Hour)
             if (H > 12) {
                 return H - 12
             } else if (H == 0) {
@@ -88,7 +89,7 @@ namespace clock {
                 return H
             }
         } else {
-            return AdvClock(Time.Hour)
+            return Clock(Time.Hour)
         }
     }
     /**
@@ -96,14 +97,14 @@ namespace clock {
      */
     //% block
     export function getMinute(): number {
-        return AdvClock(Time.Minute)
+        return Clock(Time.Minute)
     }
     /**
      * Only returns the seconds of the time
      */
     //% block
     export function getSecond(): number {
-        return AdvClock(Time.Second)
+        return Clock(Time.Second)
     }
     /**
      * Sets the time to a specific value 
