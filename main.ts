@@ -113,11 +113,21 @@ namespace clock {
      */
     //% block
     export function SetTime(h: number, m: number, s: number = 0): boolean {
-        if (!(h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60)) {
+        if (!(h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60))
             return false
-        }
         //subtract 1 day from CPU clock, then add the actual time back
         toffset = - Math.floor(input.runningTime() / 1000) + (h * 3600 + m * 60 + s)
+        return true
+    }
+    function isNumber(s: string): boolean {
+        const n = "0123456789"
+        for (let i = 0; i < s.length; i++) {
+            let b = false
+            for (let j = 0; j < n.length; j++) {
+                if (s[i] == n[j]) b = true
+            }
+            if (!b) return false
+        }
         return true
     }
     /**
