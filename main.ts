@@ -1,37 +1,75 @@
+enum Time {
+    Hour,
+    Minute,
+    Second
+}
+enum TimeFormat {
+    hhmm,
+    hhmmss
+}
 /**
  * Clock functions
  */
 //% weight=100 color=#00cc96 icon="\uf017" block="Clock"
 namespace clock {
     let toffset = 0
-    let tcorrector = input.runningTime()
-    let Hour = 0
-    let Min = 0
-    let Sec = 0
+    let tcorrector = Math.floor(input.runningTime() / 1000)
     let ampm = false
     let dtlimit = 0
-    let cd = false
+    let cdstate = false
+    //the Clock mechanism:
+    function AdvClock(t: Time): number {
+        if (Math.floor(input.runningTime() / 1000) - tcorrector >= 1800) {
+            tcorrector = Math.floor(input.runningTime() / 1000)
+            toffset += 10
+        }
+        let time = Math.floor(input.runningTime() / 1000) + toffset
+        if (time >= 24 * 60 * 60) {
+            toffset -= 24 * 60 * 60
+            time = Math.floor(input.runningTime() / 1000) + toffset
+        }
+        switch (t) {
+            case Time.Hour:
+                return Math.floor(time / 3600)
+                break
+            case Time.Minute:
+                return Math.floor((time - AdvClock(Time.Hour) * 3600) / 60)
+                break
+            case Time.Second:
+                return Math.floor(time - AdvClock(Time.Hour) * 3600 - AdvClock(Time.Minute) * 60)
+                break
+        }
+    }
     /**
      * Returns the time as a string in the format "00:00"
      */
     //% block
-    export function Time(): string {
+    export function TimeString(f: TimeFormat): string {
         let str = ""
-        Clock()
-        if (Min < 10) {
-            str = "0" + Min
-        } else {
-            str = "" + Min
+        let H = AdvClock(Time.Hour)
+        let M = AdvClock(Time.Minute)
+        let S = AdvClock(Time.Second)
+        if (f == TimeFormat.hhmmss) {
+            if (S < 10) {
+                str = ":0" + S
+            } else {
+                str = ":" + S
+            }
         }
-        if (ampm && Hour > 12) {
-            Hour -= 12
-        } else if (ampm && Hour == 0) {
-            Hour = 12
-        }
-        if (Hour < 10) {
-            str = "0" + Hour + ":" + str
+        if (M < 10) {
+            str = ":0" + M + str
         } else {
-            str = "" + Hour + ":" + str
+            str = ":" + M + str
+        }
+        if (ampm && H > 12) {
+            H -= 12
+        } else if (ampm && H == 0) {
+            H = 12
+        }
+        if (H < 10) {
+            str = "0" + H + str
+        } else {
+            str = "" + H + str
         }
         return str
     }
@@ -40,37 +78,32 @@ namespace clock {
      */
     //% block
     export function getHour(): number {
-        Clock()
-        if (ampm && Hour > 12) {
-            Hour -= 12
-        } else if (ampm && Hour == 0) {
-            Hour = 12
+        if (ampm) {
+            let H = AdvClock(Time.Hour)
+            if (H > 12) {
+                return H - 12
+            } else if (H == 0) {
+                return 12
+            } else {
+                return H
+            }
+        } else {
+            return AdvClock(Time.Hour)
         }
-        return Hour
     }
     /**
      * Only returns the minutes of the time
      */
     //% block
     export function getMinute(): number {
-        Clock()
-        return Min
+        return AdvClock(Time.Minute)
     }
     /**
      * Only returns the seconds of the time
      */
     //% block
     export function getSecond(): number {
-        Clock()
-        return Sec
-    }
-    /**
-     * Returns the time in Seconds
-     */
-    //% block
-    export function getTimeInSeconds(): number {
-        Clock()
-        return Math.floor(input.runningTime() / 1000) + toffset
+        return AdvClock(Time.Second)
     }
     /**
      * Sets the time to a specific value 
@@ -78,25 +111,19 @@ namespace clock {
      * ignores invalid time
      */
     //% block
-    export function SetTime(h: number, m: number, s: number = 0): void {
-        Clock()
-        let time = Math.floor(input.runningTime() / 1000) + toffset
-        Hour = Math.floor(time / 3600)
-        Min = Math.floor((time - Hour * 3600) / 60)
-        Sec = time - Hour * 3600 - Min * 60
+    export function SetTime(h: number, m: number, s: number = 0): boolean {
         if (!(h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60)) {
-            return
+            return false
         }
-        toffset -= (Hour - h) * 3600
-        toffset -= (Min - m) * 60
-        toffset -= (Sec - s)
-        Clock()
+        //subtract 1 day from CPU clock, then add the actual time back
+        toffset = - Math.floor(input.runningTime() / 1000) + (h * 3600 + m * 60 + s)
+        return true
     }
     /**
      * Enables or disables the 12 hour clock
      */
     //% block
-    export function EnableAmPm(value: boolean) {
+    export function EnableAmPm(value: boolean): void {
         ampm = value
     }
     /**
@@ -104,66 +131,41 @@ namespace clock {
      * otherwise false
      */
     //% block
-    export function AmPmState(): boolean {
+    export function GetAmPm(): boolean {
         return ampm
-    }
-    function Clock(): void {
-        if (input.runningTime() - tcorrector >= 1800000) {
-            tcorrector = input.runningTime()
-            toffset += 12.125
-        }
-        let time = Math.floor(input.runningTime() / 1000) + toffset
-        if (time >= 24 * 60 * 60) {
-            toffset -= 24 * 60 * 60
-        }
-        time = Math.floor(input.runningTime() / 1000) + toffset
-        Hour = Math.floor(time / 3600)
-        Min = Math.floor((time - Hour * 3600) / 60)
-        Sec = time - Hour * 3600 - Min * 60
     }
     /**
      * Adds x hours to the time
      * if argument left empty, it will add 1
      */
     //% block
-    export function AddHour(hour: number = 1): void {
-        toffset += hour * 3600
-        Clock()
+    export function AddHour(h: number = 1): void {
+        toffset += h * 3600
     }
     /**
      * Adds x Mins to the time
      * if argument left empty, it will add 1
      */
     //% block
-    export function AddMinute(Min: number = 1): void {
-        toffset += Min * 60
-        Clock()
-    }
-	/**
-     * Adds x Secs to the time
-     * if argument left empty, it will add 1
-     */
-    //% block
-    export function AddSecond(Sec: number = 1): void {
-        toffset += Sec
-        Clock()
+    export function AddMinute(m: number = 1): void {
+        toffset += m * 60
     }
     /**
-     * Starts the cd of x Secs
+     * Starts the countdown of x Secs
      */
     //% block
     //% advanced=true
     export function StartCountDown(Secs: number): void {
         dtlimit = input.runningTime() + Secs * 1000
-        cd = true
+        cdstate = true
     }
     /**
-     * Stops the cd
+     * Stops and resets the countdown
      */
     //% block
     //% advanced=true
     export function StopCountDown(): void {
-        cd = false
+        cdstate = false
         let dtlimit: number
     }
     /**
@@ -172,26 +174,19 @@ namespace clock {
     //% block
     //% advanced=true
     export function CountDownState(): boolean {
-        return cd
+        return cdstate
     }
     /**
-     * Returns the remaining time as a string in the format "00:00"
+     * Returns the remaining time in Secs
+     * e.g. 01:12 -> 72 Secs
      */
     //% block
     //% advanced=true
-    export function DownTime(): string {
-        let str = ""
-        if (getRemainingSecond() < 10) {
-            str = "0" + getRemainingSecond()
-        } else {
-            str = "" + getRemainingSecond()
-        }
-        if (getRemainingMinute() < 10) {
-            str = "0" + getRemainingMinute() + ":" + str
-        } else {
-            str = "" + getRemainingMinute() + ":" + str
-        }
-        return str
+    export function getRemainingTime(): number {
+        let rt = Math.floor((dtlimit - input.runningTime()) / 1000)
+        if (cdstate && rt > 0) {
+            return rt
+        } else return 0
     }
     /**
      * Only returns the Mins of the remaining time
@@ -200,7 +195,7 @@ namespace clock {
     //% block
     //% advanced=true
     export function getRemainingMinute(): number {
-        if (cd && getRemainingTime() > 0) {
+        if (cdstate && getRemainingTime() > 0) {
             return Math.floor(Math.floor((dtlimit - input.runningTime()) / 1000) / 60)
         } else return 0
     }
@@ -211,19 +206,8 @@ namespace clock {
     //% block
     //% advanced=true
     export function getRemainingSecond(): number {
-        if (cd && getRemainingTime() > 0) {
+        if (cdstate && getRemainingTime() > 0) {
             return Math.floor((dtlimit - input.runningTime()) / 1000) - getRemainingMinute() * 60
-        } else return 0
-    }
-    /**
-     * Returns the remaining time in Secs
-     * e.g. 01:12 -> 72 Secs
-     */
-    //% block
-    //% advanced=true
-    export function getRemainingTime(): number {
-        if (cd && Math.floor((dtlimit - input.runningTime()) / 1000) > 0) {
-            return Math.floor((dtlimit - input.runningTime()) / 1000)
         } else return 0
     }
 }
