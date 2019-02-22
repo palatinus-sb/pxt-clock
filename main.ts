@@ -119,17 +119,6 @@ namespace clock {
         toffset = - Math.floor(input.runningTime() / 1000) + (h * 3600 + m * 60 + s)
         return true
     }
-    function isNumber(s: string): boolean {
-        const n = "0123456789"
-        for (let i = 0; i < s.length; i++) {
-            let b = false
-            for (let j = 0; j < n.length; j++) {
-                if (s[i] == n[j]) b = true
-            }
-            if (!b) return false
-        }
-        return true
-    }
     /**
      * Enables or disables the 12 hour clock
      */
