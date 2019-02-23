@@ -17,7 +17,7 @@ namespace clock {
      * use the enum Time.Hour or Time.Minute
      */
     //% block
-    function Clock(t: Time): number {
+    export function Clock(t: Time): number {
         /*if (Math.floor(input.runningTime() / 60000) - tcorrector >= 15) {
             tcorrector = Math.floor(input.runningTime() / 60000)
             toffset += 0.1
