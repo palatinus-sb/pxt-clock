@@ -1,43 +1,50 @@
 enum Time {
     Hour,
-    Minute,
-    Second
-}
-enum TimeFormat {
-    hhmm,
-    hhmmss
+    Minute
 }
 /**
  * Clock functions
  */
 //% weight=100 color=#00cc96 icon="\uf017" block="Clock"
 namespace clock {
-    let toffset = 0
-    let tcorrector = Math.floor(input.runningTime() / 1000)
+    let toffset = 0 // in minutes, negative values
+    //let tcorrector = Math.floor(input.runningTime() / 60000)
     let ampm = false
     let dtlimit = 0
     let cdstate = false
-    //the Clock mechanism:
+    /**
+     * Get the hours or minutes
+     * use the enum Time.Hour or Time.Minute
+     */
+    //% block
     function Clock(t: Time): number {
-        if (Math.floor(input.runningTime() / 1000) - tcorrector >= 900) {
-            tcorrector = Math.floor(input.runningTime() / 1000)
-            toffset += 5
-        }
-        let time = Math.floor(input.runningTime() / 1000) + toffset
-        if (time >= 24 * 60 * 60) {
-            toffset -= 24 * 60 * 60
-            time = Math.floor(input.runningTime() / 1000) + toffset
+        /*if (Math.floor(input.runningTime() / 60000) - tcorrector >= 15) {
+            tcorrector = Math.floor(input.runningTime() / 60000)
+            toffset += 0.1
+        }*/
+        // CPU time - toffset == current time
+        let time = Math.floor(input.runningTime() / 60000) + toffset
+        if (time >= 24 * 60) {
+            toffset -= 24 * 60
+            time = Math.floor(input.runningTime() / 60000) + toffset
         }
         switch (t) {
             case Time.Hour:
-                return Math.floor(time / 3600)
+                let H = Math.floor(time / 60)
+                if (ampm) {
+                    if (H > 12) {
+                        return H - 12
+                    } else if (H == 0) {
+                        return 12
+                    } else {
+                        return H
+                    }
+                } else {
+                    return H
+                }
                 break
             case Time.Minute:
-                return Math.floor((time - Math.floor(time / 3600) * 3600) / 60)
-                break
-            case Time.Second:
-                return (Math.floor(time - Math.floor(time / 3600) * 3600
-                    - Math.floor((time - Math.floor(time / 3600) * 3600) / 60) * 60))
+                return time - Math.floor(time / 60) * 60
                 break
         }
     }
@@ -45,18 +52,10 @@ namespace clock {
      * Returns the time as a string in the format "00:00"
      */
     //% block
-    export function TimeString(f: TimeFormat): string {
+    export function TimeString(): string {
         let str = ""
         let H = Clock(Time.Hour)
         let M = Clock(Time.Minute)
-        let S = Clock(Time.Second)
-        if (f == TimeFormat.hhmmss) {
-            if (S < 10) {
-                str = ":0" + S
-            } else {
-                str = ":" + S
-            }
-        }
         if (M < 10) {
             str = ":0" + M + str
         } else {
@@ -75,48 +74,16 @@ namespace clock {
         return str
     }
     /**
-     * Only returns the hours of the time
-     */
-    //% block
-    export function getHour(): number {
-        if (ampm) {
-            let H = Clock(Time.Hour)
-            if (H > 12) {
-                return H - 12
-            } else if (H == 0) {
-                return 12
-            } else {
-                return H
-            }
-        } else {
-            return Clock(Time.Hour)
-        }
-    }
-    /**
-     * Only returns the minutes of the time
-     */
-    //% block
-    export function getMinute(): number {
-        return Clock(Time.Minute)
-    }
-    /**
-     * Only returns the seconds of the time
-     */
-    //% block
-    export function getSecond(): number {
-        return Clock(Time.Second)
-    }
-    /**
      * Sets the time to a specific value 
      * eg: 11, 54, 23 is 11:54:23
      * ignores invalid time
      */
     //% block
     export function SetTime(h: number, m: number, s: number = 0): boolean {
-        if (!(h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60))
+        if (!(h >= 0 && h < 24 && m >= 0 && m < 60))
             return false
-        //subtract 1 day from CPU clock, then add the actual time back
-        toffset = - Math.floor(input.runningTime() / 1000) + (h * 3600 + m * 60 + s)
+        // CPU time - toffset == current time
+        toffset = - Math.floor(input.runningTime() / 60000) + (h * 60 + m)
         return true
     }
     /**
@@ -140,7 +107,7 @@ namespace clock {
      */
     //% block
     export function AddHour(h: number = 1): void {
-        toffset += h * 3600
+        toffset += h * 60
     }
     /**
      * Adds x Mins to the time
@@ -148,7 +115,7 @@ namespace clock {
      */
     //% block
     export function AddMinute(m: number = 1): void {
-        toffset += m * 60
+        toffset += m
     }
     /**
      * Starts the countdown of x Secs
