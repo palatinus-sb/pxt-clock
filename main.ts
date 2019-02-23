@@ -1,37 +1,41 @@
 enum Time {
     Hour,
-    Minute
+    Minute,
+    Second
+}
+enum TimeFormat {
+    hhmm,
+    hhmmss
 }
 /**
  * Clock functions
  */
 //% weight=100 color=#00cc96 icon="\uf017" block="Clock"
 namespace clock {
-    let toffset = 0 // in minutes, negative values
-    //let tcorrector = Math.floor(input.runningTime() / 60000)
+    let toffset = 0
+    //let tcorrector = Math.floor(input.runningTime() / 1000)
     let ampm = false
     let dtlimit = 0
     let cdstate = false
     /**
-     * Get the hours or minutes
-     * use the enum Time.Hour or Time.Minute
+     * Returns the Hours, Minutes, or Seconds of the time
+     * needs 1 enum Time parameter
      */
     //% block
-    export function Clock(t: Time): number {
-        /*if (Math.floor(input.runningTime() / 60000) - tcorrector >= 15) {
-            tcorrector = Math.floor(input.runningTime() / 60000)
-            toffset += 0.1
+    export function getTime(t: Time): number {
+        /*if (Math.floor(input.runningTime() / 1000) - tcorrector >= 900) {
+            tcorrector = Math.floor(input.runningTime() / 1000)
+            toffset += 5
         }*/
-        // CPU time - toffset == current time
-        let time = Math.floor(input.runningTime() / 60000) + toffset
-        if (time >= 24 * 60) {
-            toffset -= 24 * 60
-            time = Math.floor(input.runningTime() / 60000) + toffset
+        let time = Math.floor(input.runningTime() / 1000) + toffset
+        if (time >= 24 * 60 * 60) {
+            toffset -= 24 * 60 * 60
+            time = Math.floor(input.runningTime() / 1000) + toffset
         }
         switch (t) {
             case Time.Hour:
-                let H = Math.floor(time / 60)
                 if (ampm) {
+                    let H = Math.floor(time / 3600)
                     if (H > 12) {
                         return H - 12
                     } else if (H == 0) {
@@ -40,11 +44,15 @@ namespace clock {
                         return H
                     }
                 } else {
-                    return H
+                    return Math.floor(time / 3600)
                 }
                 break
             case Time.Minute:
-                return time - Math.floor(time / 60) * 60
+                return Math.floor((time - Math.floor(time / 3600) * 3600) / 60)
+                break
+            case Time.Second:
+                return (Math.floor(time - Math.floor(time / 3600) * 3600
+                    - Math.floor((time - Math.floor(time / 3600) * 3600) / 60) * 60))
                 break
         }
     }
@@ -52,10 +60,18 @@ namespace clock {
      * Returns the time as a string in the format "00:00"
      */
     //% block
-    export function TimeString(): string {
+    export function TimeString(f: TimeFormat): string {
         let str = ""
-        let H = Clock(Time.Hour)
-        let M = Clock(Time.Minute)
+        let H = getTime(Time.Hour)
+        let M = getTime(Time.Minute)
+        if (f == TimeFormat.hhmmss) {
+            let S = getTime(Time.Second)
+            if (S < 10) {
+                str = ":0" + S
+            } else {
+                str = ":" + S
+            }
+        }
         if (M < 10) {
             str = ":0" + M + str
         } else {
@@ -80,10 +96,10 @@ namespace clock {
      */
     //% block
     export function SetTime(h: number, m: number, s: number = 0): boolean {
-        if (!(h >= 0 && h < 24 && m >= 0 && m < 60))
+        if (!(h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60))
             return false
-        // CPU time - toffset == current time
-        toffset = - Math.floor(input.runningTime() / 60000) + (h * 60 + m)
+        //subtract 1 day from CPU clock, then add the actual time back
+        toffset = - Math.floor(input.runningTime() / 1000) + (h * 3600 + m * 60 + s)
         return true
     }
     /**
@@ -100,22 +116,6 @@ namespace clock {
     //% block
     export function GetAmPm(): boolean {
         return ampm
-    }
-    /**
-     * Adds x hours to the time
-     * if argument left empty, it will add 1
-     */
-    //% block
-    export function AddHour(h: number = 1): void {
-        toffset += h * 60
-    }
-    /**
-     * Adds x Mins to the time
-     * if argument left empty, it will add 1
-     */
-    //% block
-    export function AddMinute(m: number = 1): void {
-        toffset += m
     }
     /**
      * Starts the countdown of x Secs
