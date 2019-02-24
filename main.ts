@@ -10,7 +10,7 @@ enum TimeFormat {
 /**
  * Clock functions
  */
-//% weight=100 color=#00cc96 icon="\uf017" block="Clock"
+//% weight=100 color=#00b383 icon="\uf017" block="Clock"
 namespace clock {
     let toffset = 0
     //let tcorrector = Math.floor(input.runningTime() / 1000)
@@ -60,7 +60,7 @@ namespace clock {
      * Returns the time as a string in the format "00:00"
      */
     //% block
-    export function TimeString(f: TimeFormat): string {
+    export function timeString(f: TimeFormat): string {
         let str = ""
         let H = getTime(Time.Hour)
         let M = getTime(Time.Minute)
@@ -94,7 +94,7 @@ namespace clock {
      * takes 2 or 3 arguments, returns false if invalid time is trying to be set
      */
     //% block
-    export function SetTime(h: number, m: number, s: number = 0): boolean {
+    export function setTime(h: number, m: number, s: number = 0): boolean {
         if (!(h >= 0 && h < 24 && m >= 0 && m < 60 && s >= 0 && s < 60))
             return false
         //subtract 1 day from CPU clock, then add the actual time back
@@ -105,7 +105,7 @@ namespace clock {
      * Enables or disables the 12 hour clock
      */
     //% block
-    export function EnableAmPm(value: boolean): void {
+    export function enableAmPm(value: boolean): void {
         ampm = value
     }
     /**
@@ -113,7 +113,7 @@ namespace clock {
      * otherwise false
      */
     //% block
-    export function GetAmPm(): boolean {
+    export function getAmPm(): boolean {
         return ampm
     }
     /**
@@ -121,7 +121,7 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function StartCountDown(Secs: number): void {
+    export function startCountDown(Secs: number): void {
         dtlimit = input.runningTime() + Secs * 1000
         cdstate = true
     }
@@ -130,7 +130,7 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function StopCountDown(): void {
+    export function stopCountDown(): void {
         cdstate = false
     }
     /**
@@ -138,7 +138,7 @@ namespace clock {
      */
     //% block
     //% advanced=true
-    export function CountDownState(): boolean {
+    export function countDownState(): boolean {
         return cdstate
     }
     /**
