@@ -10,7 +10,7 @@ enum TimeFormat {
 /**
  * Clock functions
  */
-//% weight=100 color=#00b383 icon="\uf017" block="Clock"
+//% weight=100 color=#00b370 icon="\uf017" block="Clock"
 namespace clock {
     let toffset = 0
     //let tcorrector = Math.floor(input.runningTime() / 1000)
