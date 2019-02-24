@@ -28,9 +28,9 @@ namespace clock {
             toffset += 5
         }*/
         let time = Math.floor(input.runningTime() / 1000) + toffset
-        if (time >= 24 * 60 * 60) {
-            toffset -= 24 * 60 * 60
-            time = Math.floor(input.runningTime() / 1000) + toffset
+        while (time >= 24 * 3600) {
+            toffset -= 24 * 3600
+            time -= 24 * 3600
         }
         switch (t) {
             case Time.Hour:
@@ -91,8 +91,7 @@ namespace clock {
     }
     /**
      * Sets the time to a specific value 
-     * eg: 11, 54, 23 is 11:54:23
-     * ignores invalid time
+     * takes 2 or 3 arguments, returns false if invalid time is trying to be set
      */
     //% block
     export function SetTime(h: number, m: number, s: number = 0): boolean {
@@ -133,7 +132,6 @@ namespace clock {
     //% advanced=true
     export function StopCountDown(): void {
         cdstate = false
-        let dtlimit: number
     }
     /**
      * Returns true if cd is initiated, otherwise false
