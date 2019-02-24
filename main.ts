@@ -35,13 +35,12 @@ namespace clock {
         switch (t) {
             case Time.Hour:
                 if (ampm) {
-                    let H = Math.floor(time / 3600)
-                    if (H > 12) {
-                        return H - 12
-                    } else if (H == 0) {
+                    if (Math.floor(time / 3600) > 12) {
+                        return Math.floor(time / 3600) - 12
+                    } else if (Math.floor(time / 3600) == 0) {
                         return 12
                     } else {
-                        return H
+                        return Math.floor(time / 3600)
                     }
                 } else {
                     return Math.floor(time / 3600)
