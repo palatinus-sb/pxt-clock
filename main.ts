@@ -13,7 +13,7 @@ enum TimeFormat {
 //% weight=100 color=#00b370 icon="\uf017" block="Clock"
 namespace clock {
     let toffset = 0
-    //let tcorrector = Math.floor(input.runningTime() / 1000)
+    let tcorrector = Math.floor(input.runningTime() / 1000)
     let ampm = false
     let dtlimit = 0
     let cdstate = false
@@ -23,10 +23,10 @@ namespace clock {
      */
     //% block
     export function getTime(t: Time): number {
-        /*if (Math.floor(input.runningTime() / 1000) - tcorrector >= 900) {
-            tcorrector = Math.floor(input.runningTime() / 1000)
-            toffset += 5
-        }*/
+        while (Math.floor(input.runningTime() / 1000) - tcorrector >= 900) {
+            tcorrector += 900
+            toffset += 2
+        }
         let time = Math.floor(input.runningTime() / 1000) + toffset
         while (time >= 24 * 3600) {
             toffset -= 24 * 3600
