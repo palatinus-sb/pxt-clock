@@ -25,7 +25,7 @@ namespace clock {
     export function getTime(t: Time): number {
         while (Math.floor(input.runningTime() / 1000) - tcorrector >= 900) {
             tcorrector += 900
-            toffset += 2
+            toffset += 2.5
         }
         let time = Math.floor(input.runningTime() / 1000) + toffset
         while (time >= 24 * 3600) {
