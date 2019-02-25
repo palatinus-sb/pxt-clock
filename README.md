@@ -42,7 +42,7 @@ It's **infinitely more precise** then using the ```basic.pause(1000); time++``` 
 
 **getRemainingTime(): number**
 -  use this function to get the remaining time
--  *e.g. 01:12 -> 72 Secs*
+-  *e.g. 01:12 -> 72 Seconds*
 
 **getRemainingMinute(): number**
 -  use this function to get the Minutes of the remaining time
