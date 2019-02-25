@@ -1,12 +1,10 @@
 # Precise Clock
 
 
+## functions
 
-## TODO
-
-- [ ] Add a reference for your blocks here
-- [ ] Add "- beta" to the GitHub project description if you are still iterating it.
-- [ ] Use "pxt bump" to create a tagged release on GitHub
+- [function getTime(t: Time): number] 
+  Use this function to get the Hours, Minutes, or Seconds of the time. 
 
 
 ## License
@@ -16,4 +14,3 @@
 ## Supported targets
 
 * for PXT/microbit
-
