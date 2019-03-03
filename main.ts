@@ -13,7 +13,8 @@ enum TimeFormat {
 //% weight=100 color=#00b370 icon="\uf017" block="Clock"
 namespace clock {
     let toffset = 0
-    let tcorrector = Math.floor(input.runningTime() / 1000)
+    let tcounter = Math.floor(input.runningTime() / 1000)
+    let corrector = 3.25
     let ampm = false
     let dtlimit = 0
     let cdstate = false
@@ -23,9 +24,9 @@ namespace clock {
      */
     //% block
     export function getTime(t: Time): number {
-        while (Math.floor(input.runningTime() / 1000) - tcorrector >= 900) {
-            tcorrector += 900
-            toffset += 3.25
+        while (Math.floor(input.runningTime() / 1000) - tcounter >= 900) {
+            tcounter += 900
+            toffset += corrector
         }
         let time = Math.floor(input.runningTime() / 1000) + toffset
         while (time >= 24 * 3600) {
@@ -114,6 +115,15 @@ namespace clock {
     //% block
     export function getAmPm(): boolean {
         return ampm
+    }
+    /**
+     * Sets the time correction value.
+     * If the clock is too slow, set it to a higher value than 3.25
+     * If the clock is too fast, set it to a lower value than 3.25
+     */
+    //% block
+    export function setTimeCorrector(v: number): void {
+        corrector = v
     }
     /**
      * Starts the countdown of x Secs
