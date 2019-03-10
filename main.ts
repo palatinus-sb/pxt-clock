@@ -16,8 +16,6 @@ namespace clock {
     let tcounter = Math.floor(input.runningTime() / 1000)
     let corrector = 3.25
     let ampm = false
-    let dtlimit = 0
-    let cdstate = false
     /**
      * Returns the Hours, Minutes, or Seconds of the time
      * needs 1 enum Time parameter
@@ -125,29 +123,35 @@ namespace clock {
     export function setTimeCorrector(v: number): void {
         corrector = v
     }
+}
+/**
+ * Countdown
+ */
+//% weight=100 color=#00b3b3 icon="\uf252" block="Countdown"
+//% advanced=true
+namespace countdown {
+    let cdstate = false
+    let end: number
     /**
-     * Starts the countdown of x Secs
+     * Starts the countdown of X seconds
      */
     //% block
-    //% advanced=true
-    export function startCountDown(Secs: number): void {
-        dtlimit = input.runningTime() + Secs * 1000
+    export function start(secs: number): void {
+        end = input.runningTime() + secs * 1000
         cdstate = true
     }
     /**
      * Stops and resets the countdown
      */
     //% block
-    //% advanced=true
-    export function stopCountDown(): void {
+    export function stop(): void {
         cdstate = false
     }
     /**
      * Returns true if cd is initiated, otherwise false
      */
     //% block
-    //% advanced=true
-    export function countDownState(): boolean {
+    export function state(): boolean {
         return cdstate
     }
     /**
@@ -155,11 +159,9 @@ namespace clock {
      * e.g. 01:12 -> 72 Secs
      */
     //% block
-    //% advanced=true
-    export function getRemainingTime(): number {
-        let rt = Math.floor((dtlimit - input.runningTime()) / 1000)
-        if (cdstate && rt > 0) {
-            return rt
+    export function remainingTime(): number {
+        if (cdstate && Math.floor((end - input.runningTime()) / 1000) > 0) {
+            return Math.floor((end - input.runningTime()) / 1000)
         } else return 0
     }
     /**
@@ -167,10 +169,9 @@ namespace clock {
      * e.g. 01:12 -> 1 Min
      */
     //% block
-    //% advanced=true
-    export function getRemainingMinute(): number {
-        if (cdstate && getRemainingTime() > 0) {
-            return Math.floor(Math.floor((dtlimit - input.runningTime()) / 1000) / 60)
+    export function remainingMinute(): number {
+        if (cdstate && remainingTime() > 0) {
+            return Math.floor(Math.floor((end - input.runningTime()) / 1000) / 60)
         } else return 0
     }
     /**
@@ -178,10 +179,9 @@ namespace clock {
      * e.g. 01:12 -> 12 Secs
      */
     //% block
-    //% advanced=true
-    export function getRemainingSecond(): number {
-        if (cdstate && getRemainingTime() > 0) {
-            return Math.floor((dtlimit - input.runningTime()) / 1000) - getRemainingMinute() * 60
+    export function remainingSecond(): number {
+        if (cdstate && remainingTime() > 0) {
+            return Math.floor((end - input.runningTime()) / 1000) - remainingMinute() * 60
         } else return 0
     }
 }
